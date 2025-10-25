@@ -77,6 +77,12 @@ void HwcLayer::SetLayerProperties(const LayerProperties& layer_properties) {
 }
 
 bool HwcLayer::ImportFb(BufferSlot& slot) const {
+  auto max_res = parent_->GetPipe().device->GetMaxResolution();
+  const auto& bi = slot.bi;
+  if (bi.width > max_res.first || bi.height > max_res.second) {
+       return true;
+  }
+
   if (parent_->IsInHeadlessMode()) {
     return true;
   }
