@@ -112,6 +112,10 @@ auto Properties::EnableVirtualDisplay() -> bool {
   return (property_get_bool("vendor.hwc.drm.enable_virtual_display", 0) != 0);
 }
 
+auto Properties::Enablefps() -> bool {
+  return (property_get_bool("vendor.hwc.drm.enable.fps", 0) != 0);
+}
+
 auto Properties::GetCtmHandling() -> CtmHandling {
   char proptext[PROPERTY_VALUE_MAX];
   constexpr char kDrmOrGpu[] = "DRM_OR_GPU";

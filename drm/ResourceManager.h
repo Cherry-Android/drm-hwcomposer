@@ -71,6 +71,7 @@ class ResourceManager {
 
   static auto GetTimeMonotonicNs() -> int64_t;
 
+  static auto GetTimeMonotonicMs() -> int64_t;
  private:
   auto GetOrderedConnectors() -> std::vector<DrmConnector *>;
   void UpdateFrontendDisplays();

@@ -133,6 +133,14 @@ auto ResourceManager::GetTimeMonotonicNs() -> int64_t {
   return (int64_t(ts.tv_sec) * kNsInSec) + int64_t(ts.tv_nsec);
 }
 
+auto ResourceManager::GetTimeMonotonicMs() -> int64_t {
+ struct timespec ts {};
+ clock_gettime(CLOCK_MONOTONIC, &ts);
+ constexpr int64_t kNsInSec = 1000LL;
+ constexpr int64_t kNsInMs  = 1000000LL;
+ return (int64_t(ts.tv_sec) * kNsInSec) + (int64_t(ts.tv_nsec) / kNsInMs);
+}
+
 void ResourceManager::UpdateFrontendDisplays() {
   auto ordered_connectors = GetOrderedConnectors();
 
