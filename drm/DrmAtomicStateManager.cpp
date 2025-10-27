@@ -97,21 +97,11 @@ void DrmAtomicStateManager::CleanFailedCommit() {
 bool DrmAtomicStateManager::CommitFrame(AtomicCommitArgs &args) {
   // NOLINTNEXTLINE(misc-const-correctness)
   ATRACE_CALL();
+
+  // Fps measurement
   bool show_fps = false;
   if (Properties::Enablefps()) {
 	 show_fps = true;
-  }
-  const int64_t now_ms = ResourceManager::GetTimeMonotonicMs();
-  if (show_fps) {
-      static double start_ms = now_ms;
-      static int cur_frame = 0;
-      const int max_frames = 60;
-      if (++cur_frame >= max_frames) {
-          double cur_ms = now_ms;
-          ALOGI("fps: %f", 1e3*cur_frame/(cur_ms - start_ms));
-          start_ms = cur_ms;
-          cur_frame = 0;
-      }
   }
 
   // Clear args.active if it's a no-op.
@@ -190,6 +180,19 @@ bool DrmAtomicStateManager::CommitFrame(AtomicCommitArgs &args) {
   }
 
   committed_frame_state_ = std::move(atomic_request->new_frame_state);
+
+  const int64_t now_ms = ResourceManager::GetTimeMonotonicMs();
+  if (show_fps) {
+      static double start_ms = now_ms;
+      static int cur_frame = 0;
+      const int max_frames = 60;
+      if (++cur_frame >= max_frames) {
+          double cur_ms = now_ms;
+          ALOGI("fps: %f", 1e3*cur_frame/(cur_ms - start_ms));
+          start_ms = cur_ms;
+          cur_frame = 0;
+      }
+  }
 
   if (args.display_mode) {
     auto raw_mode = args.display_mode.value().GetRawMode();
